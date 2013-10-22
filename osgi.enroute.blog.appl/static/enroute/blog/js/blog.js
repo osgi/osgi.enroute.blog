@@ -4,20 +4,8 @@
  * {@code @param} in this file provides the variables set in the scope.
  */
 (function(angular) {
-	var MODULE = angular.module("Blog", ['ngResource']);
-	var Command, error, ok;
-	var EXAMPLE = {
-		id : 1,
-		title : "title",
-		created : new Date().getTime(),
-		lastModified : new Date().getTime(),
-		content : "There was a table set out under a tree in front of the house, and the March Hare and "
-				+ "the Hatter were having tea at it: a Dormouse was sitting between them, fast asleep, and the other two were using it as a cushion, resting their elbows on it, and talking "
-				+ "over its head. 'Very uncomfortable for the Dormouse,' thought Alice; 'only, as it's asleep, I suppose it doesn't mind.'\nThe table was a large one, but the three were all "
-				+ "crowded together at one corner of it: 'No room! No room!' they cried out when they saw Alice coming. 'There's PLENTY of room!' said Alice indignantly, and she sat"
-				+ " down in a large arm-chair at one end of the table.\n'Have some wine,' the March Hare said in an encouraging tone. Alice looked all round the table, but there was nothing on it but "
-				+ "tea. 'I don't see any wine,' she remarked.\n'There isn't any,' said the March Hare.\n'Then it wasn't very civil of you to offer it,' said Alice angrily."
-	};
+	var MODULE = angular.module("Blog", [ "ngResource" ]);
+	var Post, Command, error;
 
 	// Configure the routing table, this dispatches the page requests
 
@@ -54,7 +42,7 @@
 	 *            The promise for a list to hold the posts
 	 */
 	function Home($scope) {
-		$scope.posts = [ EXAMPLE ]
+		$scope.posts = Post.query(ok, error);
 	}
 
 	/**
@@ -69,6 +57,7 @@
 	 */
 
 	function PostSearch($scope, $routeParams) {
+		$scope.posts = Post.query($routeParams, ok, error);
 	}
 
 	/**
@@ -85,15 +74,18 @@
 	 */
 
 	function PostView($scope, $routeParams, $location) {
-		$scope.post = EXAMPLE;
+		$scope.post = Post.get($routeParams,ok,error);
 
 		$scope.edit = function() {
 			$location.url("/edit/" + $routeParams.id);
 		}
-
+		
 		$scope.delete_ = function() {
-			if (confirm("You are sure you want to delete this post?"))
-				$location.url("/");
+			if ( confirm("You are sure you want to delete this post?") )
+				$scope.post.$remove(function(d) {
+					$location.url("/");
+					ok();
+				}, error);
 		}
 	}
 
@@ -113,9 +105,12 @@
 	function editPost($scope, $location, value) {
 
 		$scope.save = function() {
-			$location.url("/post/" + 1);
+			$scope.edit.$save(function(post) {
+				$location.url("/post/" + post.id);
+				ok();
+			}, error);
 		}
-
+		
 		$scope.reset = function() {
 			$scope.edit = angular.copy(value);
 		}
@@ -137,10 +132,10 @@
 	 * @see editPost
 	 */
 	function PostNew($scope, $location) {
-		editPost($scope, $location, {
+		editPost($scope, $location, new Post({
 			content : "",
 			title : ""
-		});
+		}));
 	}
 
 	/**
@@ -149,7 +144,10 @@
 	 * @see editPost
 	 */
 	function PostEdit($scope, $routeParams, $location) {
-		editPost($scope, $location, EXAMPLE);
+		var post = Post.get($routeParams, function() {
+			editPost($scope, $location, post);
+			ok();
+		}, error);
 	}
 
 	/**
@@ -170,9 +168,11 @@
 			$scope.message = "";
 		}
 
-		Command = $resource("/rest/command/:command", {
-			command : '@command'
+		Post = $resource("/rest/blogpost/:id", {
+			id : '@id'
 		});
+
+		Command = $resource("/rest/command/:command", {command:'@command'});
 
 		$scope.go = function(url) {
 			$location.url(url);
@@ -186,20 +186,14 @@
 		}
 
 		$scope.testdata = function() {
-			Command.get({
-				command : 'TESTDATA'
-			}, function() {
-				$route.reload();
-				ok();
+			Command.get({command:'TESTDATA'},function() {
+				$route.reload(); ok();
 			}, error);
 		}
 
 		$scope.exception = function() {
-			Command.get({
-				command : 'EXCEPTION'
-			}, ok, error);
+			Command.get({command:'EXCEPTION'},ok, error);
 		}
-
 	}
 
 	/**
