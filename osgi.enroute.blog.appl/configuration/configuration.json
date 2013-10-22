@@ -1,0 +1,20 @@
+[ 
+	{
+	    "service.pid" : "org.apache.felix.http",
+	    "org.apache.felix.http.enable" : true,
+	    "org.osgi.service.http.port" : 8080,
+	    "org.apache.felix.http.debug" : true,
+	    "org.apache.felix.https.enable" : false
+	}, {
+	    "service.factoryPid" : "aQute.webserver.WebServer",
+	    "service.pid" : "WebServer",
+	    "exceptions" : true,
+	    "alias" : "/",
+	    "bundles" : false
+	}, {
+	    "service.factoryPid" : "aQute.executor.ExecutorImpl",
+	    "type" : "FIXED",
+	    "service.pid" : "DefaultExecutor",
+	    "size" : 16
+	} 
+]

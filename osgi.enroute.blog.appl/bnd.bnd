@@ -1,0 +1,25 @@
+#
+# enRoute Blog Application
+#
+
+Bundle-Version:			1.0.0.${tstamp}
+Bundle-Description:	\
+ A simple Blog Application root bundle. The application runs as a web server\
+ and provides a GUI to list, create, update, and delete blogs.
+
+-includeresource: \
+	{configuration=configuration}, \
+	{readme.md}
+
+####
+
+#
+# For testing purposes. Uses the in-memory provider. 
+# Just use 'Debug As/Bnd OSGi Run Launcher' on the bnd.bnd file or 
+# 'bnd run' in this project's directory. 
+#
+
+-runbundles: \
+	cnf.run.base, \
+	cnf.run.web, \
+	cnf.run.web.debug
