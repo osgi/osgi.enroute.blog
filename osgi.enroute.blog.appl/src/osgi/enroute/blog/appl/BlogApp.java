@@ -16,13 +16,10 @@
 
 package osgi.enroute.blog.appl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.regex.Pattern;
+import osgi.enroute.blog.api.BlogManager;
+import osgi.enroute.blog.api.domain.BlogPost;
 import aQute.bnd.annotation.component.Component;
+import aQute.bnd.annotation.component.Reference;
 import aQute.service.rest.Options;
 import aQute.service.rest.ResourceManager;
 
@@ -38,8 +35,7 @@ import aQute.service.rest.ResourceManager;
  */
 @Component
 public class BlogApp implements ResourceManager {
-	final Map<Long, BlogPost>	posts	= new ConcurrentHashMap<Long, BlogPost>();
-	final AtomicLong			ids		= new AtomicLong(1000);
+	BlogManager	blogs;
 
 	/*
 	 * The Options interface provides access to the Http Servlet
@@ -66,24 +62,7 @@ public class BlogApp implements ResourceManager {
 	 */
 	public Iterable<BlogPost> getBlogpost(BlogPostOptions options)
 			throws Exception {
-		String query = options.query();
-		if (query == null) {
-			return posts.values();
-		}
-		// Very simplistic way to support globbing
-		query = query.trim();
-		query = query.replace("*", ".*").replace("?", ".?");
-		query = "(" + query.replaceAll("[\\s+]+ ", ")|(") + ")";
-
-		Pattern q = Pattern.compile(query, Pattern.CASE_INSENSITIVE);
-
-		List<BlogPost> result = new ArrayList<BlogPost>();
-
-		for (BlogPost p : posts.values()) {
-			if (q.matcher(p.content).find() || q.matcher(p.title).find())
-				result.add(p);
-		}
-		return result;
+		return blogs.queryBlogs(options.query());
 	}
 
 	/*
@@ -91,12 +70,8 @@ public class BlogApp implements ResourceManager {
 	 * that contains a Blog Post.
 	 */
 	public BlogPost postBlogpost(BlogPostOptions opts) throws Exception {
-		BlogPost post = opts._();
-		post.id = ids.incrementAndGet();
-		post.created = System.currentTimeMillis();
-		post.lastModified = System.currentTimeMillis();
-		posts.put(post.id, post);
-		return post;
+		long id = blogs.createPost(opts._());
+		return blogs.getPost(id);
 	}
 
 	/*
@@ -105,11 +80,8 @@ public class BlogApp implements ResourceManager {
 	 */
 	public BlogPost postBlogpost(BlogPostOptions opts, long id) throws Exception {
 		BlogPost post = opts._();
-		BlogPost old = posts.get(id);
-		old.content = post.content;
-		old.title = post.title;
-		post.lastModified = System.currentTimeMillis();
-		return old;
+		blogs.updatePost(post);
+		return post;
 	}
 
 	/*
@@ -117,14 +89,14 @@ public class BlogApp implements ResourceManager {
 	 * without a body.
 	 */
 	public void deleteBlogpost(Options opts, long id) throws Exception {
-		posts.remove(id);
+		blogs.deletePost(id);
 	}
 
 	/*
 	 * Get an existing blog post. Maps to {@code GET /rest/blogpost/<id>}.
 	 */
 	public BlogPost getBlogpost(Options opts, long id) throws Exception {
-		return posts.get(id);
+		return blogs.getPost(id);
 	}
 
 	/*
@@ -172,7 +144,7 @@ public class BlogApp implements ResourceManager {
 
 	void testdata() throws Exception {
 		try {
-			post(
+			blogs.createPost(post(
 					"Down the Rabbit Hole",
 					"Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing "
 							+ "to do: once or twice she had peeped into the book her sister was reading, but it had no pictures "
@@ -232,8 +204,8 @@ public class BlogApp implements ResourceManager {
 							+ "went Alice like the wind, and was just in time to hear it say, as it turned a corner, `Oh my "
 							+ "ears and whiskers, how late it's getting!' She was close behind it when she turned to corner, "
 							+ "but the Rabbit was no longer to be seen: she found herself in a long, low hall, which was lit "
-							+ "up by a row of lamps hanging from the roof.");
-			post(
+							+ "up by a row of lamps hanging from the roof."));
+			blogs.createPost(post(
 					"The Pool of Tears",
 					"`Curiouser and curiouser!' cried Alice (she was so much surprised, that for the moment "
 							+ "she quite forgot how to speak good English); `now I'm opening out like the largest "
@@ -252,8 +224,8 @@ public class BlogApp implements ResourceManager {
 							+ "                        (WITH ALICE'S LOVE).\n"
 							+ "Oh dear, what nonsense I'm talking!'\n"
 							+ "Just then her head struck against the roof of the hall: in fact she was now more than nine feet "
-							+ "high, and she at once took up the little golden key and hurried off to the garden door.");
-			post(
+							+ "high, and she at once took up the little golden key and hurried off to the garden door."));
+			blogs.createPost(post(
 					"A Caucus Race and a Long Tail",
 					"They were indeed a queer-looking party that assembled on the bank--the birds with draggled feathers, the "
 							+ "animals with their fur clinging close to them, and all dripping wet, cross, and uncomfortable. The first "
@@ -265,8 +237,8 @@ public class BlogApp implements ResourceManager {
 							+ "Mouse, who seemed to be a person of authority among them, called out, `Sit down, all of you, and listen "
 							+ "to me! I'LL soon make you dry enough!' They all sat down at once, in a large ring, with the Mouse in the "
 							+ "middle. Alice kept her eyes anxiously fixed on it, for she felt sure she would catch a bad cold if she did "
-							+ "not get dry very soon.");
-			post(
+							+ "not get dry very soon."));
+			blogs.createPost(post(
 					"The Rabbit Sends in a Little Bill",
 					"It was the White Rabbit, trotting slowly back again, and looking anxiously "
 							+ "about as it went, as if it had lost something; and she heard it muttering to itself "
@@ -279,7 +251,7 @@ public class BlogApp implements ResourceManager {
 							+ "Very soon the Rabbit noticed Alice, as she went hunting about, and called out to her "
 							+ "in an angry tone, `Why, Mary Ann, what ARE you doing out here? Run home this moment, and "
 							+ "fetch me a pair of gloves and a fan! Quick, now!' And Alice was so much frightened that she "
-							+ "ran off at once in the direction it pointed to, without trying to explain the mistake it had made.");
+							+ "ran off at once in the direction it pointed to, without trying to explain the mistake it had made."));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -292,9 +264,16 @@ public class BlogApp implements ResourceManager {
 		BlogPost p = new BlogPost();
 		p.title = title;
 		p.content = content;
-		p.id = ids.getAndIncrement();
-		p.lastModified = p.created = System.currentTimeMillis();
-		posts.put(p.id, p);
 		return p;
 	}
+
+	/*
+	 * Used by DS to inject us with our Blog Manager
+	 */
+
+	@Reference
+	void setBlog(BlogManager bm) {
+		this.blogs = bm;
+	}
+
 }
