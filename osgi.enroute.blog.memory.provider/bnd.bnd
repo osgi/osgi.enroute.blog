@@ -1,0 +1,26 @@
+#
+# enRoute Blog Mangager - In Memory Provider
+#
+
+Bundle-Version: 	1.0.0.${tstamp}
+
+Bundle-Description: \
+ This bundle provides an implementation of the enRoute Blog Manager API. The implementation\
+ uses a simple HashTable and thus all content is lost after a restart. This is really a\
+ trivial implementation.
+ 
+Export-Package: 	\
+	osgi.enroute.blog.api.*
+		
+Private-Package: 	\
+	osgi.enroute.blog.memory.provider
+	
+Service-Component: 	*
+
+-includeresource: {readme.md}
+
+#### 
+
+-buildpath: osgi.core,\
+	biz.aQute.bnd.annotation,\
+	osgi.enroute.blog.api;version=latest

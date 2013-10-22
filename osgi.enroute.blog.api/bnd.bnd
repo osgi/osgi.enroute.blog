@@ -1,0 +1,16 @@
+#
+# OSGi enRoute Blog Manager API
+#
+
+Bundle-Version: 		1.0.0.${tstamp}
+Bundle-Description: 	\
+ The API for a Blog Manager. A Blog Manager provides create/update/read/list/delete\
+ methods for BlogPosts. This is a very simple BlogManager, intended to be used \
+ for a single person.
+
+Export-Package: \
+	osgi.enroute.blog.api.*;provide:=true
+	
+####
+	
+-buildpath: biz.aQute.bnd.annotation
