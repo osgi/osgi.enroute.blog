@@ -1,0 +1,5 @@
+cnf.org.ow2.jotm
+osgi.jdbc.managed.aux
+osgi.jpa.managed.aux
+org.apache.geronimo.specs.geronimo-j2ee-connector_1.6_spec;version='[1.0.0,2.0.0)'
+javax.persistence;version=2.1.0

@@ -1,0 +1,4 @@
+org.ow2.jotm.core;version=2.3.1
+org.ow2.util.i18n;version=2.0.0
+org.ow2.bundles.ow2-util-log;version=1.0.35
+osgi.jta.jotm.adapter;version=latest

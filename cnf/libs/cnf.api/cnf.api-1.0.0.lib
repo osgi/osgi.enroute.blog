@@ -1,0 +1,5 @@
+javax.persistence;version=2.1.0
+slf4j.api;version=1.7.4
+org.apache.geronimo.specs.geronimo-j2ee-connector_1.6_spec;version='[1.0.0,2.0.0)'
+org.apache.geronimo.specs.geronimo-jta_1.1_spec;version=1.1.1
+osgi.core;version='[4.2,5.0.0)'
