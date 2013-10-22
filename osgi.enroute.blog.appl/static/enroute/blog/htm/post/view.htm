@@ -1,0 +1,10 @@
+<div ng-show=post.id>
+	<h2>{{post.title}}</h2>
+	<div style="min-height: 500px" class=well>{{post.content}}</div>
+	<div class='btn-group  pull-right'>
+		<button class='btn btn-primary' ng-click=edit()>Edit</button>
+		<button class='btn btn-danger' ng-click=delete_()>Delete</button>
+	</div>
+</div>
+<div ng-show=!post.id>No such post</div>
+

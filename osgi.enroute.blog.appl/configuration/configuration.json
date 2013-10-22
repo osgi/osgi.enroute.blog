@@ -19,6 +19,7 @@
 	}, {
         "service.factoryPid" : "aQute.rest.impl.servlet.RestServlet",
         "service.pid" : "RestEndpoint",
+        "angular": true,
         "alias": "/rest"
-    } 
+    }
 ]

@@ -1,0 +1,13 @@
+<form>
+	<fieldset>
+		<legend>Search Posts</legend>
+		<div class=input-append>
+			<input type="text" ng-model=search.query placeholder="Search in a blog">
+			<button type="submit" class="btn" ng-click=search(search.query)>Search</button>
+		</div>
+	</fieldset>
+</form>
+
+<div ng-show="posts.length &gt 0">
+<ng-include src="'/enroute/blog/htm/post/table.htm'"></ng-include>
+</div>
