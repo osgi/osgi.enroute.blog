@@ -16,5 +16,9 @@
 	    "type" : "FIXED",
 	    "service.pid" : "DefaultExecutor",
 	    "size" : 16
-	} 
+	}, {
+        "service.factoryPid" : "aQute.rest.impl.servlet.RestServlet",
+        "service.pid" : "RestEndpoint",
+        "alias": "/rest"
+    } 
 ]

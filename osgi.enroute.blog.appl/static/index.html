@@ -36,6 +36,7 @@ elements become clickable, we should set the cursor to indicate this. -->
 
 			<ul class="nav navbar-nav">
 				<li class="active"><a ng-click=testdata()>Test Data</a></li>
+				<li class="active"><a ng-click=exception()>Exception</a></li>
 			</ul>
 			<form class="navbar-form navbar-right" role="search">
 				<div class="form-group">
@@ -45,6 +46,7 @@ elements become clickable, we should set the cursor to indicate this. -->
 			</form>
 		</nav>
 		
+		<div class=alert ng-class="{'alert-warning':message}">{{message}}</div>
 		<div style="margin-top: 60px;"></div>
 
 		<form role="form">
@@ -87,6 +89,7 @@ elements become clickable, we should set the cursor to indicate this. -->
 	</div>
 
 	<script type="text/javascript" src="/google/angular/angular.js"></script>
+	<script type="text/javascript" src="/google/angular/angular-resource.js"></script>
 	<script type="text/javascript" src="/enroute/blog/js/blog.js"></script>
 </body>
 </html>
