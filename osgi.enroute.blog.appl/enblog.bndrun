@@ -1,0 +1,54 @@
+#
+# enRoute Blog Appliaction
+# 
+# This is the launch file for the blog application. This file
+# is used to debug the application as well as used in creating
+# an executable JAR with bnd (<code>bnd package blog.bndrun</code>).
+#
+
+Bundle-Version: 		1.0.0.${tstamp}
+JPM-Command: 			enblog
+Bundle-Description: 	A simplistic blog application to show of en Route. \
+ The application is a web service with a GUI to list, add, delete, and update\
+ blogs. Just go to port http://localhost:8080 and enjoy. This command can be \
+ installed with jpm under the name ${JPM-Command}.
+ 
+Include-Resource: {readme.md}
+
+####
+
+
+
+-runbundles: \
+	cnf.run.base, \
+	cnf.run.web, \
+	cnf.run.web.debug, \
+\
+	osgi.enroute.blog.appl;version=latest, \
+\
+	aQute.twitter.bootstrap;version=2.3.2,\
+\
+	aQute.google.angular.stable;version=1.0.8,\
+\
+	osgi.enroute.blog.jpa.provider;version=latest, \
+\
+	cnf.run.persistence, \
+	osgi.jta.filter.aux;version=1.0.0, \
+	cnf.org.eclipse.persistence, \
+	org.h2
+
+
+#
+# Since we use transactions, we need to override the VM's transaction
+# package since it is incomplete. For hibernate we also need to 
+# provide a package version for the javax.xml.stream
+#
+
+-runpath: 	\
+	org.apache.geronimo.specs.geronimo-jta_1.1_spec;version=1.1.1
+
+-runsystempackages: \
+	javax.xml.stream;version=1.1, \
+	javax.xml.stream.events;version=1.1, \
+	javax.xml.stream.util;version=1.1
+

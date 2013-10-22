@@ -19,6 +19,7 @@ package osgi.enroute.blog.test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import java.util.Iterator;
+import javax.transaction.TransactionManager;
 import junit.framework.TestCase;
 import org.osgi.framework.FrameworkUtil;
 import osgi.enroute.blog.api.BlogManager;
@@ -32,6 +33,7 @@ import aQute.test.dummy.log.DummyLog;
  */
 public class BlogTest extends TestCase {
 	BlogManager					blog;
+	private TransactionManager	tm;
 
 	/**
 	 * Setup this test case using {@link DummyDS}.
@@ -62,6 +64,7 @@ public class BlogTest extends TestCase {
 		// Create a blog
 		//
 
+		tm.begin();
 		long id;
 		try {
 			//
@@ -71,7 +74,9 @@ public class BlogTest extends TestCase {
 			p.title = "Title";
 			p.content = "text";
 			id = blog.createPost(p);
+			tm.commit();
 		} catch (Exception e) {
+			tm.rollback();
 			e.printStackTrace();
 			fail();
 			return;
@@ -81,6 +86,7 @@ public class BlogTest extends TestCase {
 		// Get the blog we just created
 		//
 
+		tm.begin();
 		try {
 			BlogPost post = blog.getPost(id);
 			assertNotNull(post);
@@ -110,14 +116,17 @@ public class BlogTest extends TestCase {
 			assertThat(post.created, is(created));
 			assertTrue(post.lastModified <= System.currentTimeMillis());
 			assertTrue(post.lastModified >= created);
+			tm.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
+			tm.rollback();
 			fail();
 		}
 
 		/**
 		 * See if we can get the blog we just created from the query
 		 */
+		tm.begin();
 		try {
 			int n = 0;
 			Iterator<BlogPost> i = blog.queryBlogs(null).iterator();
@@ -127,6 +136,7 @@ public class BlogTest extends TestCase {
 			}
 			assertEquals(1, n);
 		} catch (Exception e) {
+			tm.rollback();
 			e.printStackTrace();
 			fail();
 		}
@@ -135,5 +145,10 @@ public class BlogTest extends TestCase {
 	@Reference
 	void setBlogManager(BlogManager bm) {
 		this.blog = bm;
+	}
+
+	@Reference
+	void setTransactionManager(TransactionManager tm) {
+		this.tm = tm;
 	}
 }

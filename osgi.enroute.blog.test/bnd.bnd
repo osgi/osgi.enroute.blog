@@ -28,6 +28,7 @@ Service-Component: 	*
 -buildpath: \
 	osgi.core;version='[4.3.1,6)',\
 	org.apache.servicemix.bundles.junit;version='[4.11.0,5.0.0)', \
+	org.apache.geronimo.specs.geronimo-jta_1.1_spec;version=1.1.1, \
 	aQute.dstest;version=1.1.0, \
 	osgi.enroute.blog.api;version=latest
 
@@ -41,7 +42,9 @@ Service-Component: 	*
 -runbundles: \
 	cnf.run.base, \
 	aQute.dstest;version=1.1.0, \
-	osgi.enroute.blog.memory.provider;version=latest
+	cnf.org.ow2.jotm,\
+	osgi.enroute.blog.memory.provider;version=latest, \
+	org.apache.geronimo.specs.geronimo-j2ee-connector_1.6_spec;version='[1.0.0,2.0.0)'
 
 #
 # The test requires the Transaction Manager and thus
@@ -49,5 +52,7 @@ Service-Component: 	*
 #
 
 -runpath: \
-	org.apache.servicemix.bundles.junit;version=4.11
+	org.apache.servicemix.bundles.junit;version=4.11, \
+	org.apache.geronimo.specs.geronimo-jta_1.1_spec;version=1.1.1
+
 
