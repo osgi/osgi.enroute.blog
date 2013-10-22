@@ -8,6 +8,7 @@ Bundle-Description:	\
  and provides a GUI to list, create, update, and delete blogs.
 
 -includeresource: \
+	{static=static}, \
 	{configuration=configuration}, \
 	{readme.md}
 
