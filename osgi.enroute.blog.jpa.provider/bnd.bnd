@@ -1,0 +1,94 @@
+#
+# enRoute Blog Manager - JPA Provider
+#
+# This bundle is setup using the Blog Manager Test case so that 
+# it can be run as Debug As/bnd OSGi Test Runner (JUnit)
+#
+
+Bundle-Description:		Implement the BlogManager API on JPA. 
+Private-Package: 		osgi.enroute.blog.jpa.provider
+Export-Package: \
+	osgi.enroute.blog.api.*;provide:=true
+	
+Service-Component: 		*
+
+# 
+# Required by JPA, defines the persistence unit
+# 
+
+Meta-Persistence: persistence.xml
+
+-includeresource: \
+	{${Meta-Persistence}}, \
+	{readme.md}
+
+####
+
+-buildpath: \
+	cnf.api;version='[1,2)', \
+	biz.aQute.bnd.annotation;version=2.2,\
+	osgi.enroute.blog.api;version=latest, \
+	org.apache.servicemix.bundles.junit;version='[4.11.0,5.0.0)'
+
+#
+# Thise -runbundles are setup so that you can debug this project
+# using the tests of the osgi.enrout.blog.test project. Just
+# use 'bnd test' or in Eclipse 'Debug As/Bnd OSGi Test Launcher (JUnit)'
+# on the bnd.bnd file.
+#
+
+project.osgi.junit = true
+
+-runbundles: \
+	cnf.run.base, \
+	cnf.run.web, \
+	cnf.run.web.debug, \
+	aQute.dstest;version=1.1.0, \
+\
+	osgi.enroute.blog.test;version=latest, \
+\
+	cnf.run.persistence, \
+	cnf.org.hibernate, \
+	org.h2
+
+
+#
+# Fixes for the VM. 
+#
+# The VM is not exporting version numbers for certain packages and has the
+# wrong content for transactions.
+#
+
+-testpath: \
+	org.apache.servicemix.bundles.junit;version=4.11, \
+	org.apache.geronimo.specs.geronimo-jta_1.1_spec;version=1.1.1
+
+-runsystempackages: \
+	javax.xml.stream;version=1.1, \
+	javax.xml.stream.events;version=1.1, \
+	javax.xml.stream.util;version=1.1
+
+#
+# Define the configuration for running this bundle in test mode.
+# We need to create a DataSource and an EntityManager
+# for this test.
+#
+
+-runproperties: bnd.configuration = '[ \
+	{\
+	    "service.factoryPid" : "osgi.jpa.managed.aux.JPAManager",\
+	    "service.pid" : "Wildcard",\
+	    "name" : "*"\
+	}, {\
+	    "service.factoryPid" : "osgi.jdbc.managed.aux.XADataSourceFactory",\
+	    "service.pid" : "H2DataSource",\
+	    "url" : "jdbc:h2:mem:db",\
+	    "dSF.target" : "(osgi.jdbc.driver.class=org.h2.Driver)"\
+	}\
+]'
+
+
+
+
+
+

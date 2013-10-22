@@ -1,0 +1,12 @@
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+             version="2.0">
+   <persistence-unit name="tutorial" transaction-type="JTA">
+	<!--
+		This provides a trivial persistence unit for the enRoute Blogging Application. 
+		It is included in the application bundle.
+ 	-->
+      <class>osgi.enroute.blog.jpa.provider.BlogPostImpl</class>
+   </persistence-unit>
+</persistence>

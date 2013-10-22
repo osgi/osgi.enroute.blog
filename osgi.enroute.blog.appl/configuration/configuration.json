@@ -21,5 +21,16 @@
         "service.pid" : "RestEndpoint",
         "angular": true,
         "alias": "/rest"
+    }, {
+        "service.factoryPid" : "osgi.jpa.managed.aux.JPAManager",
+        "service.pid" : "Wildcard",
+        "name" : "*"
+    }, {
+        "service.factoryPid" : "osgi.jdbc.managed.aux.XADataSourceFactory",
+        "service.pid" : "H2DataSource",
+        "url" : "jdbc:h2:mem:db",
+        "dSF.target" : "(osgi.jdbc.driver.class=org.h2.Driver)"
+    }, {
+            "service.pid" : "osgi.jta.filter.aux.JTACoordinator"
     }
 ]
