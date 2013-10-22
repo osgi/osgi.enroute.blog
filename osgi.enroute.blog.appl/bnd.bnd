@@ -7,6 +7,15 @@ Bundle-Description:	\
  A simple Blog Application root bundle. The application runs as a web server\
  and provides a GUI to list, create, update, and delete blogs.
 
+Private-Package: 		\
+	osgi.enroute.blog.appl
+
+####
+
+-buildpath: \
+	biz.aQute.bnd.annotation;				version=2.2,\
+	aQute.rest.srv;							version='[2.0.0,3)'
+
 -includeresource: \
 	{static=static}, \
 	{configuration=configuration}, \

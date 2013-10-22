@@ -4,7 +4,8 @@
  * {@code @param} in this file provides the variables set in the scope.
  */
 (function(angular) {
-	var MODULE = angular.module("Blog", []);
+	var MODULE = angular.module("Blog", ['ngResource']);
+	var Command, error, ok;
 	var EXAMPLE = {
 		id : 1,
 		title : "title",
@@ -23,7 +24,7 @@
 	 * 
 	 */
 
-	window.enBlog = function($scope, $location, $route) {
+	window.enBlog = function($scope, $location, $route, $resource) {
 		$scope.posts = []
 
 		$scope.save = function() {
@@ -38,10 +39,36 @@
 		$scope.remove = function(post) {
 			$scope.posts.splice($scope.posts.indexOf(post), 1);
 		}
-		
+
+		/*
+		 * Error handler, sets $scope.message
+		 */
+		error = function(result) {
+			$scope.message = "[" + result.status + "]";
+		}
+
+		ok = function(result) {
+			$scope.message = "";
+		}
+
+		Command = $resource("/rest/command/:command", {
+			command : '@command'
+		});
+
 		$scope.testdata = function() {
-			$scope.title = EXAMPLE.title;
-			$scope.content = EXAMPLE.content;
+			$scope.post = Command.get({
+				command : 'TESTDATA'
+			}, function(post) {
+				$scope.title = post.title;
+				$scope.content = post.content;
+				ok();
+			}, error);
+		}
+
+		$scope.exception = function() {
+			Command.get({
+				command : 'EXCEPTION'
+			}, ok, error);
 		}
 	}
 
