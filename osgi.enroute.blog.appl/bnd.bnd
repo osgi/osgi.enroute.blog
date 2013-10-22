@@ -23,4 +23,7 @@ Bundle-Description:	\
 -runbundles: \
 	cnf.run.base, \
 	cnf.run.web, \
-	cnf.run.web.debug
+	cnf.run.web.debug, \
+\
+	aQute.twitter.bootstrap;version=3.0.0
+
