@@ -1,4 +1,4 @@
-# enRoute Blog
+# OSGi enRoute Blog
 This workspace contains a simplistic Blog application. The purpose of this workspace
 is to demonstrate many OSGi techniques. This workspaces contains a number of branches
 that show the different stages of evolution in designing such an application.
