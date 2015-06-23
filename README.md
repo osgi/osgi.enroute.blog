@@ -1,11 +1,11 @@
 
-**This is tutorial is deprecated for now. OSGi enRoute can be found on [http://enroute.osgi.org](http://enroute.osgi.org) where you find other tutorials. A number of example applications can be found at [https://github.com/osgi/osgi.enroute.examples](https://github.com/osgi/osgi.enroute.examples).
+This is tutorial is deprecated for now. OSGi enRoute can be found on [http://enroute.osgi.org](http://enroute.osgi.org) where you find other tutorials. A number of example applications can be found at [https://github.com/osgi/osgi.enroute.examples](https://github.com/osgi/osgi.enroute.examples).
 
 This example will be updated one day since it is quite complete
-**
 
 
 
+----------------------------------------
 # OSGi enRoute Blog
 This workspace contains a simplistic Blog application. The purpose of this workspace
 is to demonstrate many OSGi techniques. This workspaces contains a number of branches
